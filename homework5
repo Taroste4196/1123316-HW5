@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>elements</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            text-align: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<script language="javascript"> 
+var turn = 0;
+var size = 3;
+var a = new Array(size);
+for (var i = 0; i < size; i++)
+    a[i] = new Array(size);
+
+function put(event) {
+    if ((typeof event == "undefined") || (!event))
+        event = window.event;
+    var e1 = event.target || event.srcElement;
+
+    var x = e1.id.substring(0, 1);
+    var y = e1.id.substring(1, 2);
+
+    {
+        var y1, y2, x1, x2;
+        y1 = eval(y) + 1;
+        if (y1 < size) {
+            var id2 = "" + x + y1;
+            var e2 = document.getElementById(id2);
+            if (e2.name == "  ") {
+                e2.name = e1.name;
+                e1.name = "  ";
+                e2.bgColor = "#eeeeee";
+                e1.innerHTML = e1.name;
+                e2.innerHTML = e2.name;
+            }
+        }
+        y1 = eval(y) - 1;
+        if (y1 >= 0) {
+            var id2 = "" + x + y1;
+            var e2 = document.getElementById(id2);
+            if (e2.name == "  ") {
+                e2.name = e1.name;
+                e1.name = "  ";
+                e2.bgColor = "#eeeeee";
+                e1.innerHTML = e1.name;
+                e2.innerHTML = e2.name;
+            }
+        }
+        x1 = eval(x) + 1;
+        if (x1 < size) {
+            var id2 = "" + x1 + y;
+            var e2 = document.getElementById(id2);
+            if (e2.name == "  ") {
+                e2.name = e1.name;
+                e1.name = "  ";
+                e2.bgColor = "#eeeeee";
+                e1.innerHTML = e1.name;
+                e2.innerHTML = e2.name;
+            }
+        }
+        x1 = eval(x) - 1;
+        if (x1 >= 0) {
+            var id2 = "" + x1 + y;
+            var e2 = document.getElementById(id2);
+            if (e2.name == "  ") {
+                e2.name = e1.name;
+                e1.name = "  ";
+                e2.bgColor = "#eeeeee";
+                e1.innerHTML = e1.name;
+                e2.innerHTML = e2.name;
+            }
+        }
+    }
+    var check = 1;
+    var num = 1;
+    for (x = 0; x < size; x++) {
+        for (y = 0; y < size; y++) {
+            if (x == (size - 1) && y == (size - 1)) {
+                var id2 = "" + x + y;
+                var e2 = document.getElementById(id2);
+                if (e2.name != "  ")
+                    check = 2;
+                num++;
+            } else {
+                var id2 = "" + x + y;
+                var e2 = document.getElementById(id2);
+                if (e2.name != num)
+                    check = 2;
+                num++;
+            }
+        }
+    }
+    
+}
+
+function init() {
+    var table = document.createElement("TABLE");
+    table.id = "gameTable";
+    document.body.appendChild(table);
+    table.border = "2";
+    table.cellSpacing = "2";
+    table.bgColor = "#eeeeee";
+    table.align = "center";
+
+    var x, y, num1 = 1;
+
+    for (x = 0; x < size; x++) {
+        r = table.insertRow(x);
+        for (y = 0; y < size; y++) {
+            c = r.insertCell(y);
+            c.width = "50";
+            c.height = "50";
+            c.id = "" + x + y;
+            if (x == (size - 1) && y == (size - 1)) {
+                c.name = "  ";
+            } else {
+                c.name = num1;
+                num1++;
+            }
+            c.vAlign = "center";
+            c.align = "center";
+            c.onclick = put;
+            c.appendChild(document.createTextNode(c.name));
+        }
+    }
+    var times = 0;
+    var my_div = null; 
+    var newDiv = null; 
+    var lx = (size - 1),
+        ly = (size - 1);
+    var bid;
+    var block;
+    while (times < 20) {
+        bid = "" + lx + ly;
+        block = document.getElementById(bid);
+        var r = Math.floor(Math.random() * 10) % (size);
+        var tx = lx;
+        var ty = ly;
+        if (r == 0) {
+            tx--;
+        } else if (r == 1) {
+            ty--;
+        } else if (r == 2) {
+            tx++;
+        } else if (r == 3) {
+            ty++;
+        }
+        if (tx >= 0 && tx < size && ty >= 0 && ty < size) {
+            lx = tx;
+            ly = ty;
+            var cid = "" + tx + ty;
+            var change = document.getElementById(cid);
+            block.name = change.name;
+            change.name = "  ";
+            block.innerHTML = block.name;
+            change.innerHTML = change.name;
+            block.innerHTML = block.name;
+            change.innerHTML = change.name;
+            times++;
+        }
+    }
+}
+
+function addRow() {
+    var table = document.getElementById('gameTable');
+    var newRow = table.insertRow(size);
+
+    for (var j = 0; j < size; j++) {
+        var cell = newRow.insertCell(j);
+        cell.width = "50";
+        cell.height = "50";
+        cell.id = size + "" + j;
+        cell.name = (size - 1) * size + j + 1;
+        cell.vAlign = "center";
+        cell.align = "center";
+        cell.onclick = put;
+        cell.appendChild(document.createTextNode(cell.name));
+    }
+    size++;
+}
+
+function addColumn() {
+    var table = document.getElementById('gameTable');
+
+    for (var i = 0; i < size; i++) {
+        var cell = table.rows[i].insertCell(size - 1);
+        cell.width = "50";
+        cell.height = "50";
+        cell.id = i + "" + (size - 1);
+        cell.name = i * size + size;
+        cell.vAlign = "center";
+        cell.align = "center";
+        cell.onclick = put;
+        cell.appendChild(document.createTextNode(cell.name));
+    }
+    size++;
+}
+
+</script>
+ 
+<body onLoad="init()">
+<div id="t1" style="position:absolute;border-width:5;border-style:double;top:10;left:150;font-size:50px"></div>
+<button onclick="addRow()">新增列</button>
+<button onclick="addColumn()">新增欄</button>
+</body>
+</html>
